@@ -13,9 +13,9 @@ import {
 
 export const getAllContacts = async (req, res, next) => {
   try {
-    const result = await listContacts();
+    const contacts = await listContacts();
 
-    res.json(result);
+    res.json(contacts);
   } catch (error) {
     next(error);
   }
@@ -24,11 +24,11 @@ export const getAllContacts = async (req, res, next) => {
 export const getOneContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await getContactById(id);
-    if (!result) {
+    const searchedContacts = await getContactById(id);
+    if (!searchedContacts) {
       throw HttpError(404);
     }
-    res.json(result);
+    res.json(searchedContacts);
   } catch (error) {
     next(error);
   }
@@ -37,12 +37,12 @@ export const getOneContact = async (req, res, next) => {
 export const deleteContact = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const result = await removeContact(id);
-    if (!result) {
+    const deletedContact = await removeContact(id);
+    if (!deletedContact) {
       throw HttpError(404);
     }
 
-    res.json(result);
+    res.json(deletedContact);
   } catch (error) {
     next(error);
   }
@@ -54,9 +54,9 @@ export const createContact = async (req, res, next) => {
     if (error) {
       throw HttpError(400, error.message);
     }
-    const result = await addContact(req.body);
+    const newContact = await addContact(req.body);
 
-    res.status(201).json(result);
+    res.status(201).json(newContact);
   } catch (error) {
     next(error);
   }
@@ -69,11 +69,11 @@ export const updateContact = async (req, res, next) => {
       throw HttpError(400, error.message);
     }
     const { id } = req.params;
-    const result = await updateContactById(id, req.body);
-    if (!result) {
+    const updatedContact = await updateContactById(id, req.body);
+    if (!updatedContact) {
       throw HttpError(404);
     }
-    res.json(result);
+    res.json(updatedContact);
   } catch (error) {
     next(error);
   }
