@@ -1,11 +1,58 @@
-import contactsService from "../services/contactsServices.js";
+import HttpError from "../helpers/HttpError.js";
+import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
-export const getAllContacts = (req, res) => {};
+import {
+  addContact,
+  getContactById,
+  listContacts,
+  removeContact,
+  updateContactById,
+} from "../services/contactsServices.js";
 
-export const getOneContact = (req, res) => {};
+const getAllContacts = async (req, res) => {
+  const contacts = await listContacts();
 
-export const deleteContact = (req, res) => {};
+  res.json(contacts);
+};
 
-export const createContact = (req, res) => {};
+const getOneContact = async (req, res) => {
+  const { id } = req.params;
+  const searchedContacts = await getContactById(id);
+  if (!searchedContacts) {
+    throw HttpError(404);
+  }
+  res.json(searchedContacts);
+};
 
-export const updateContact = (req, res) => {};
+const deleteContact = async (req, res) => {
+  const { id } = req.params;
+  const deletedContact = await removeContact(id);
+  if (!deletedContact) {
+    throw HttpError(404);
+  }
+
+  res.json(deletedContact);
+};
+
+const createContact = async (req, res) => {
+  const newContact = await addContact(req.body);
+
+  res.status(201).json(newContact);
+};
+
+const updateContact = async (req, res) => {
+  const { id } = req.params;
+  const updatedContact = await updateContactById(id, req.body);
+  if (!updatedContact) {
+    throw HttpError(404);
+  }
+  res.json(updatedContact);
+};
+
+export default {
+  getAllContacts: ctrlWrapper(getAllContacts),
+  getOneContact: ctrlWrapper(getOneContact),
+  deleteContact: ctrlWrapper(deleteContact),
+  createContact: ctrlWrapper(createContact),
+  updateContact: ctrlWrapper(updateContact),
+};
