@@ -1,6 +1,7 @@
 import { Schema, model } from "mongoose";
 
 import { emailRegexp } from "../constants/user-constants.js";
+import { handleSaveError } from "./hooks.js";
 
 const userSchema = new Schema(
   {
@@ -26,6 +27,8 @@ const userSchema = new Schema(
   },
   { versionKey: false }
 );
+
+userSchema.post("save", handleSaveError);
 
 const User = model("user", userSchema);
 
