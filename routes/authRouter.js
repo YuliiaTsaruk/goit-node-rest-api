@@ -10,5 +10,10 @@ authRouter.post(
   validateBody(userSingUpSchema),
   authControllers.register
 );
+authRouter.post(
+  "/login",
+  validateBody(userSingInSchema),
+  authControllers.login
+);
 
 export default authRouter;
