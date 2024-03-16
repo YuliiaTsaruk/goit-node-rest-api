@@ -5,6 +5,7 @@ dotenv.config();
 import {
   findUser,
   singup,
+  updateUser,
   validatePassword,
 } from "../services/authServices.js";
 
@@ -43,6 +44,7 @@ const login = async (req, res) => {
     id,
   };
   const token = jwt.sign(payload, JWT_SECRET, { expiresIn: "23h" });
+  await updateUser({ _id: id }, { token });
 
   res.json({
     token,
@@ -57,8 +59,15 @@ const getCurrent = async (req, res) => {
   });
 };
 
+const logout = async (req, res) => {
+  const { _id } = req.user;
+  await updateUser({ _id }, { token: "" });
+  res.status(204).json({ message: "No Content" });
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
+  logout: ctrlWrapper(logout),
 };
