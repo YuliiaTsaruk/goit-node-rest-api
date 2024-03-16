@@ -1,3 +1,4 @@
+import { query } from "express";
 import HttpError from "../helpers/HttpError.js";
 import ctrlWrapper from "../helpers/ctrlWrapper.js";
 
@@ -12,7 +13,9 @@ import {
 
 const getAllContacts = async (req, res) => {
   const { _id: owner } = req.user;
-  const contacts = await listContacts({ owner });
+  const { page = 1, limit = 20 } = req.query;
+  const skip = (page - 1) * limit;
+  const contacts = await listContacts({ owner }, { skip, limit });
 
   res.json(contacts);
 };
