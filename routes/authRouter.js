@@ -1,8 +1,13 @@
 import express from "express";
 import authControllers from "../controllers/authControllers.js";
 import validateBody from "../helpers/validateBody.js";
-import { userSingUpSchema, userSingInSchema } from "../schemas/userSchemas.js";
+import {
+  userSingUpSchema,
+  userSingInSchema,
+  updateSubscriptionSchema,
+} from "../schemas/userSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
+import isValidId from "../middlewares/isValidId.js";
 const authRouter = express.Router();
 
 authRouter.post(
@@ -20,5 +25,13 @@ authRouter.post(
 authRouter.get("/current", authenticate, authControllers.getCurrent);
 
 authRouter.post("/logout", authenticate, authControllers.logout);
+
+authRouter.patch(
+  "/:id/subscription",
+  authenticate,
+  isValidId,
+  validateBody(updateSubscriptionSchema),
+  authControllers.updateSubscription
+);
 
 export default authRouter;

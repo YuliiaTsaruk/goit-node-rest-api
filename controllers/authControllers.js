@@ -6,6 +6,7 @@ import {
   findUser,
   singup,
   updateUser,
+  updateUserSubscription,
   validatePassword,
 } from "../services/authServices.js";
 
@@ -32,11 +33,11 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await findUser({ email });
   if (!user) {
-    throw HttpError(401, "Email or password is invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
   const comparePassword = await validatePassword(password, user.password);
   if (!comparePassword) {
-    throw HttpError(401, "Email or password is invalid");
+    throw HttpError(401, "Email or password is wrong");
   }
 
   const { _id: id } = user;
@@ -48,14 +49,18 @@ const login = async (req, res) => {
 
   res.json({
     token,
+    user: {
+      email: user.email,
+      subscription: user.subscription,
+    },
   });
 };
 
 const getCurrent = async (req, res) => {
-  const { username, email } = req.user;
+  const { email, subscription } = req.user;
   res.json({
-    username,
     email,
+    subscription,
   });
 };
 
@@ -65,9 +70,19 @@ const logout = async (req, res) => {
   res.status(204).json({ message: "No Content" });
 };
 
+const updateSubscription = async (req, res) => {
+  const { _id: id } = req.user;
+  const result = await updateUserSubscription({ _id: id }, req.body);
+  if (!result) {
+    throw HttpError(404);
+  }
+  res.status(200).json(result);
+};
+
 export default {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   getCurrent: ctrlWrapper(getCurrent),
   logout: ctrlWrapper(logout),
+  updateSubscription: ctrlWrapper(updateSubscription),
 };
