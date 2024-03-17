@@ -25,7 +25,10 @@ const register = async (req, res) => {
   const newUser = await singup(req.body);
 
   res.status(201).json({
-    email: newUser.email,
+    user: {
+      email: newUser.email,
+      subscription: newUser.subscription,
+    },
   });
 };
 
