@@ -1,3 +1,5 @@
+import gravatar from "gravatar";
+// import Jimp from "jimp";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 dotenv.config();
@@ -21,13 +23,14 @@ const register = async (req, res) => {
   if (user) {
     throw HttpError(409, "Email in use");
   }
-
-  const newUser = await singup(req.body);
+  const avatarURL = gravatar.url(email);
+  const newUser = await singup(req.body, avatarURL);
 
   res.status(201).json({
     user: {
       email: newUser.email,
       subscription: newUser.subscription,
+      avatarURL: newUser.avatarURL,
     },
   });
 };
