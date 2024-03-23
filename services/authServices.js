@@ -16,3 +16,6 @@ export const updateUser = (filter, data) => User.findOneAndUpdate(filter, data);
 
 export const updateUserSubscription = (filter, data) =>
   User.findOneAndUpdate(filter, data, { new: true });
+
+export const updateUserAvatar = async (filter, data) =>
+  User.findOneAndUpdate(filter, data, { new: true });
