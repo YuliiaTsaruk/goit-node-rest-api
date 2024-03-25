@@ -19,5 +19,3 @@ export const updateUserSubscription = (filter, data) =>
 
 export const updateUserAvatar = async (filter, data) =>
   User.findOneAndUpdate(filter, data, { new: true });
-
-// export const deleteUsers = (filter) => User.deleteMany(filter);

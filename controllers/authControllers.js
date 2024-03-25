@@ -90,6 +90,11 @@ const updateSubscription = async (req, res) => {
 
 const updateAvatar = async (req, res) => {
   const { _id } = req.user;
+
+  if (!req.file || !req.file.filename) {
+    throw HttpError(400, "You must add a file to update the avatar");
+  }
+
   const { filename } = req.file;
 
   const oldPath = path.resolve("tmp", filename);
@@ -102,7 +107,8 @@ const updateAvatar = async (req, res) => {
 
   await fs.rename(oldPath, newPath);
 
-  const posterPath = path.join("public", "avatars", filename);
+  const posterPath = path.join("avatars", filename);
+
   const result = await updateUserAvatar(
     { _id },
     { avatarURL: posterPath },
