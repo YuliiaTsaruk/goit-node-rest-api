@@ -8,6 +8,7 @@ import {
 } from "../schemas/userSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
 import isValidId from "../middlewares/isValidId.js";
+import upload from "../middlewares/upload.js";
 const authRouter = express.Router();
 
 authRouter.post(
@@ -32,6 +33,13 @@ authRouter.patch(
   isValidId,
   validateBody(updateSubscriptionSchema),
   authControllers.updateSubscription
+);
+
+authRouter.patch(
+  "/avatars",
+  authenticate,
+  upload.single("avatar"),
+  authControllers.updateAvatar
 );
 
 export default authRouter;
