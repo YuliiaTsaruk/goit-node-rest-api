@@ -17,6 +17,8 @@ authRouter.post(
   authControllers.register
 );
 
+authRouter.get("/verify/:verificationToken", authControllers.verify);
+
 authRouter.post(
   "/login",
   validateBody(userSingInSchema),
