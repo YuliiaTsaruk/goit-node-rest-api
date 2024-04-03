@@ -5,6 +5,7 @@ import {
   userSingUpSchema,
   userSingInSchema,
   updateSubscriptionSchema,
+  userEmailSchema,
 } from "../schemas/userSchemas.js";
 import authenticate from "../middlewares/authenticate.js";
 import isValidId from "../middlewares/isValidId.js";
@@ -18,6 +19,12 @@ authRouter.post(
 );
 
 authRouter.get("/verify/:verificationToken", authControllers.verify);
+
+authRouter.post(
+  "/verify",
+  validateBody(userEmailSchema),
+  authControllers.resendVerify
+);
 
 authRouter.post(
   "/login",
