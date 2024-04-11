@@ -20,3 +20,7 @@ export const updateSubscriptionSchema = Joi.object({
       "any.required": "missing field subscription",
     }),
 });
+
+export const userEmailSchema = Joi.object({
+  email: Joi.string().pattern(emailRegexp).required(),
+});
